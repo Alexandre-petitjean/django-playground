@@ -8,18 +8,26 @@ ARG BUILD_ENVIRONMENT=local
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  # dependencies for building Python packages
+  # Dependencies for building Python packages
   build-essential \
   # psycopg dependencies
-  libpq-dev
+  libpq-dev \
+  # Poetry dependencies
+  curl
 
-# Requirements are installed here to ensure they will be cached.
-COPY ./requirements .
+# Install Poetry
+ENV POETRY_VERSION=1.8.1
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
-# Create Python Dependency and Sub-Dependency Wheels.
-RUN pip wheel --wheel-dir /usr/src/app/wheels  \
-  -r ${BUILD_ENVIRONMENT}.txt
+# Add Poetry to PATH
+ENV PATH="/root/.local/bin:$PATH"
 
+# Copy pyproject.toml and poetry.lock
+COPY pyproject.toml poetry.lock* ./
+
+# Install Python dependencies using Poetry
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-cache --no-interaction --no-ansi --sync --with dev
 
 # Python 'run' stage
 FROM python AS python-run-stage
@@ -30,13 +38,19 @@ ARG APP_HOME=/app
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV BUILD_ENV=${BUILD_ENVIRONMENT}
+ENV PATH="/root/.local/bin:$PATH"
 
 WORKDIR ${APP_HOME}
 
-
-# devcontainer dependencies and utils
+# Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  sudo git bash-completion nano ssh
+  # psycopg dependencies
+  libpq-dev \
+  # Translations dependencies
+  gettext \
+  sudo git bash-completion nano ssh \
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/*
 
 # Create devcontainer user and add it to sudoers
 RUN groupadd --gid 1000 dev-user \
@@ -45,24 +59,14 @@ RUN groupadd --gid 1000 dev-user \
   && chmod 0440 /etc/sudoers.d/dev-user
 
 
-# Install required system dependencies
-RUN apt-get update && apt-get install --no-install-recommends -y \
-  # psycopg dependencies
-  libpq-dev \
-  # Translations dependencies
-  gettext \
-  # cleaning up unused files
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/*
+# Copy installed Python packages from the build stage to the run stage
+COPY --from=python-build-stage /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=python-build-stage /usr/local/bin /usr/local/bin
 
-# All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
-# copy python dependency wheels from python-build-stage
-COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
+# Copy Poetry installation
+COPY --from=python-build-stage /root/.local /root/.local
 
-# use wheels to install python dependencies
-RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
-  && rm -rf /wheels/
-
+# Copy entrypoint and start scripts
 COPY ./compose/production/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
@@ -71,9 +75,7 @@ COPY ./compose/local/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
-
-
-# copy application code to WORKDIR
+# Copy application code to WORKDIR
 COPY . ${APP_HOME}
 
 ENTRYPOINT ["/entrypoint"]
