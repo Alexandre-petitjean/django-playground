@@ -12,17 +12,25 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   build-essential \
   # psycopg dependencies
   libpq-dev \
+  # Poetry dependencies
+  curl \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
-# Requirements are installed here to ensure they will be cached.
-COPY ./requirements /requirements
+# Install Poetry
+ENV POETRY_VERSION=1.8.1
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
-# create python dependency wheels
-RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels  \
-  -r /requirements/local.txt -r /requirements/production.txt \
-  && rm -rf /requirements
+# Add Poetry to PATH
+ENV PATH="/root/.local/bin:$PATH"
+
+# Copy pyproject.toml and poetry.lock
+COPY pyproject.toml poetry.lock* ./
+
+# Install Python dependencies using Poetry
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-cache --no-interaction --no-ansi --sync --with dev
 
 
 # Python 'run' stage
@@ -48,12 +56,12 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
-# copy python dependency wheels from python-build-stage
-COPY --from=python-build-stage /usr/src/app/wheels /wheels
+# Copy installed Python packages from the build stage to the run stage
+COPY --from=python-build-stage /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=python-build-stage /usr/local/bin /usr/local/bin
 
-# use wheels to install python dependencies
-RUN pip install --no-cache /wheels/* \
-  && rm -rf /wheels
+# Copy Poetry installation
+COPY --from=python-build-stage /root/.local /root/.local
 
 COPY ./compose/local/docs/start /start-docs
 RUN sed -i 's/\r$//g' /start-docs
