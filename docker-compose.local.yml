@@ -1,7 +1,7 @@
 volumes:
   django_playground_local_postgres_data: {}
   django_playground_local_postgres_data_backups: {}
-  
+
 
 services:
   django:
