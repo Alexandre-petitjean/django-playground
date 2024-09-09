@@ -13,6 +13,7 @@ Welcome to Django Playground's documentation!
    howto
    pycharm/configuration
    users
+   stocks
 
 
 

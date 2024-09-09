@@ -68,6 +68,12 @@
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'about' %}">About</a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'stocks:stocks' %}">Stocks</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'stocks:stock-movements' %}">Stock Movements</a>
+                </li>
                 {% if request.user.is_authenticated %}
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'users:detail' request.user.pk %}">{% translate "My Profile" %}</a>
@@ -107,7 +113,7 @@
         {% endif %}
         {% block main %}
           {% block content %}
-            <p>Use this document as a way to quick start any new project.</p>
+            <p>Welcome to the Django Playground !</p>
           {% endblock content %}
         {% endblock main %}
       </div>

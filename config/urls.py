@@ -20,7 +20,7 @@ urlpatterns = [
     path("users/", include("django_playground.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
-    # ...
+    path("stocks/", include("django_playground.stocks.urls", namespace="stocks")),
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]

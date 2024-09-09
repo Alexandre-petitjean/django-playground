@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+  All Stocks
+{% endblock title %}
+{% block content %}
+  <div class="container">
+    <h1>All Stocks</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Market Cap</th>
+          <th>Volume</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stock in stocks %}
+          <tr>
+            <td>{{ stock.symbol }}</td>
+            <td>{{ stock.name }}</td>
+            <td>{{ stock.price }}</td>
+            <td>{{ stock.market_cap }}</td>
+            <td>{{ stock.volume }}</td>
+            <td>
+              <a href="{% url 'stocks:detail' stock.pk %}" class="btn btn-primary">View</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}

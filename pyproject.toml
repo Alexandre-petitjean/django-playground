@@ -136,6 +136,9 @@ extend-exclude = [
     "staticfiles/*",
 ]
 
+# Allow lines to be as long as 119. Base is 88.
+line-length = 119
+
 [tool.ruff.lint]
 select = [
   "F",
