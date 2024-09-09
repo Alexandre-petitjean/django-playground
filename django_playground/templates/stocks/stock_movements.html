@@ -16,20 +16,16 @@
           <th>Product</th>
           <th>Quantity</th>
           <th>Description</th>
-          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {% for stock in stocks %}
+        {% for movement in object_list %}
           <tr>
-            <td>{{ stock.symbol }}</td>
-            <td>{{ stock.name }}</td>
-            <td>{{ stock.price }}</td>
-            <td>{{ stock.market_cap }}</td>
-            <td>{{ stock.volume }}</td>
-            <td>
-              <a href="{% url 'stocks:detail' stock.pk %}" class="btn btn-primary">View</a>
-            </td>
+            <td>{{ movement.movement_type }}</td>
+            <td>{{ movement.date }}</td>
+            <td>{{ movement.product }}</td>
+            <td>{{ movement.quantity }}</td>
+            <td>{{ movement.description }}</td>
           </tr>
         {% endfor %}
       </tbody>

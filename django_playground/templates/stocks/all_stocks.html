@@ -11,28 +11,42 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Symbol</th>
           <th>Name</th>
-          <th>Price</th>
-          <th>Market Cap</th>
-          <th>Volume</th>
+          <th>category</th>
+          <th>Supplier Cap</th>
+          <th>Description</th>
+          <th>Quantity in stock</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {% for stock in stocks %}
+        {% for product in object_list %}
           <tr>
-            <td>{{ stock.symbol }}</td>
-            <td>{{ stock.name }}</td>
-            <td>{{ stock.price }}</td>
-            <td>{{ stock.market_cap }}</td>
-            <td>{{ stock.volume }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.category }}</td>
+            <td>{{ product.supplier }}</td>
+            <td>{{ product.description | truncatechars:25 }}</td>
+            <td>{{ product.quantity_in_stock }}</td>
             <td>
-              <a href="{% url 'stocks:detail' stock.pk %}" class="btn btn-primary">View</a>
+              <a href="{% url 'stocks:product-detail' product.pk %}"
+                 class="btn btn-primary">View</a>
             </td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
+    <div class="pagination">
+      <span class="step-links">
+        {% if page_obj.has_previous %}
+          <a href="?page=1">« first</a>
+          <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+        <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">next</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}">last »</a>
+        {% endif %}
+      </span>
+    </div>
   </div>
 {% endblock content %}
