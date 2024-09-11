@@ -1,9 +1,13 @@
 # Django Playground
 
-A Playground to test new thing !
+> This app is not meant to be used in production, it's just a playground to test Django feature or create POC.
+
 
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![python](https://img.shields.io/badge/Python-3.12.5-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
+[![Django](https://img.shields.io/badge/5.0.9-green?logo=django&label=Django&labelColor=grey&color=%23092E20)](https://www.python.org)
+
 
 License: MIT
 
