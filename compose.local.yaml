@@ -1,17 +1,19 @@
 volumes:
   django_playground_local_postgres_data: {}
   django_playground_local_postgres_data_backups: {}
+  django_playground_local_rabbitmq_data: {}
 
 
 services:
-  django:
+  django: &django
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
     image: django_playground_local_django
-    container_name: django_playground_local_django
+    container_name: my_awesome_project_local_django
     depends_on:
       - postgres
+      - rabbitmq
     volumes:
       - .:/app:z
     env_file:
@@ -34,3 +36,41 @@ services:
       - ./.envs/.local/.postgres
     ports:
         - '5432:5432'
+
+  rabbitmq:
+    image: rabbitmq:3.13.7-management-alpine
+    container_name: django_playground_local_rabbitmq
+    volumes:
+      - django_playground_local_rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+  celery_worker:
+    <<: *django
+    restart: always
+    image: django_playground_local_celery_worker
+    container_name: my_awesome_project_local_celery_worker
+    depends_on:
+      - rabbitmq
+      - postgres
+    ports: [ ]
+    command: /start-celery-worker
+
+  celery_beat:
+    <<: *django
+    image: django_playground_local_celery_beat
+    container_name: my_awesome_project_local_celery_beat
+    depends_on:
+      - rabbitmq
+      - postgres
+    ports: [ ]
+    command: /start-celery-beat
+
+  flower:
+    <<: *django
+    image: django_playground_local_flower
+    container_name: my_awesome_project_local_flower
+    ports:
+      - '5555:5555'
+    command: /start-flower

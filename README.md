@@ -15,7 +15,11 @@ License: MIT
 
 ### Features
 
-// TODO
+* User Authentication with [allauth](https://github.com/pennersr/django-allauth)
+* Bootstrap 5
+* Docker
+* Sphinx
+* Sample App **Stock**
 
 ### Technologies and tools used in this project
 
@@ -33,7 +37,7 @@ License: MIT
 
 #### Ubuntu
 ```bash
-sudo apt-get install -y build-essential curl graphviz graphviz-dev
+sudo apt-get install -y build-essential curl graphviz graphviz-dev libpq-dev
 ```
 
 #### MacOS
@@ -71,7 +75,6 @@ For convenience, you can keep your normal user logged in on Chrome and your supe
 
 
 ### 5. Start the development server
-
 
 
 ## Development
