@@ -77,6 +77,7 @@ faker = "^28.4.1"  # https://github.com/joke2k/faker
 [tool.poetry.group.prod.dependencies]
 # Base
 # ------------------------------------------------------------------------------
+
 gunicorn = "^23.0.0" # https://github.com/benoitc/gunicorn
 psycopg = {version = "^3.2.1", extras = ["c"]}  # https://github.com/psycopg/psycopg
 

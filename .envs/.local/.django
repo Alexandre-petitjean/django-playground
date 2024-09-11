@@ -5,4 +5,12 @@ IPYTHONDIR=/app/.ipython
 
 # Django
 # ------------------------------------------------------------------------------
-DJANGO_SUPERUSER_PASSWORD=admin
+RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+CELERY_RESULT_BACKEND=django-db
+
+# Celery
+# ------------------------------------------------------------------------------
+
+# Flower
+CELERY_FLOWER_USER=rGdFKMZleKiCUEJdbhBmYpeNckhhrGUI
+CELERY_FLOWER_PASSWORD=7uSWS2hgKHViIB21lbTzB29CJ8BlEdZbUTDlcImBu396mfuTUUHECOdK03jBoMzo
