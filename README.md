@@ -11,6 +11,59 @@
 
 License: MIT
 
+## Introduction
+
+### Features
+
+// TODO
+
+### Technologies and tools used in this project
+
+* [poetry](https://python-poetry.org/) as package manager.
+* [pyenv](https://github.com/pyenv/pyenv) to manage python versions.
+* [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv) to manage virtual environments.
+* [docker](https://www.docker.com/) to run the project in a container.
+* [docker-compose](https://docs.docker.com/compose/) to manage multiple containers.
+* [pre-commit](https://pre-commit.com/) to run linters and formatters before commiting.
+
+## Installation
+
+### 1. Install OS dependencies
+
+
+#### Ubuntu
+```bash
+sudo apt-get install -y build-essential curl graphviz graphviz-dev
+```
+
+#### MacOS
+
+// TODO
+
+### 1. Create a virtual environment
+
+> It's recommended to use a virtual environment to avoid conflicts with other projects.
+
+
+
+
+## Add a feature
+
+// TODO
+
+## Contributing
+
+// TODO
+
+```bash
+python -m venv venv
+```
+
+
+
+
+
+
 ## Settings
 
 Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
