@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+  All Stocks
+{% endblock title %}
+{% block content %}
+  <div class="container">
+    <h1>
+      <i class="bi bi-box-seam me-3"></i>{{ object.name | capfirst }}
+    </h1>
+    <div class="container">
+      <h3>
+        <span class="badge text-bg-primary"><i class="bi bi-tag me-3"></i>{{ object.category | capfirst }}</span>
+      </h3>
+    </div>
+    <div class="container">
+      <h3>
+        <span class="badge text-bg-secondary"><i class="bi bi-house me-3"></i>{{ object.supplier | capfirst }}</span>
+      </h3>
+    </div>
+    <br />
+    <div class="card">
+      <div class="card-header">Description</div>
+      <div class="card-body">{{ object.description }}</div>
+    </div>
+    <br />
+    <div class="card">
+      <div class="card-header">Quantity in stock</div>
+      <div class="card-body">{{ object.quantity_in_stock }}</div>
+    </div>
+  </div>
+  <hr />
+  <div>
+    <h2>Stock movements</h2>
+    <a href="{% url "stocks:stock-movements-new" object.pk %}"
+       class="btn btn-primary">New movement</a>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Movement</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">User</th>
+        <th scope="col">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for movement in object.stock_movements.all %}
+        <tr>
+          <th>{{ movement.date }}</th>
+          <td>{{ movement.get_movement_type_display }}</td>
+          <td>{{ movement.quantity }}</td>
+          <td>{{ movement.user | default_if_none:"System" }}</td>
+          <td>{{ movement.description | truncatechars:25 }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}
