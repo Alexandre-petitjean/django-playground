@@ -68,13 +68,7 @@
                   <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'about' %}">About</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'stocks:stocks' %}">Stocks</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'stocks:stock-movements' %}">Stock Movements</a>
+                  <a class="nav-link" href="{% url 'stocks:stocks' %}">Stocks App</a>
                 </li>
                 {% if request.user.is_authenticated %}
                   <li class="nav-item">
