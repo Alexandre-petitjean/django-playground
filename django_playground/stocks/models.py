@@ -4,6 +4,7 @@ import uuid
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.utils import timezone
 
 
 class Category(models.Model):
@@ -111,9 +112,9 @@ class StockMovement(models.Model):
         related_name="stock_movements",
         on_delete=models.CASCADE,
     )
-    movement_type = models.CharField(max_length=3, choices=MovementType)
+    movement_type = models.CharField(max_length=3, choices=MovementType, default=MovementType.INCOMING, blank=False)
     quantity = models.IntegerField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now())
     description = models.TextField(blank=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -123,7 +124,7 @@ class StockMovement(models.Model):
     )
 
     def __str__(self):
-        return f"{self.get_movement_type_display()} - {self.product.name} - {self.quantity}"
+        return f"{self.get_movement_type_display()} - {self.product.name} - {self.quantity} - {self.date}"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
