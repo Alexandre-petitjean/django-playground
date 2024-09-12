@@ -7,13 +7,13 @@
 {% endblock title %}
 {% block content %}
   <div class="container">
-    <h1>All Stocks</h1>
+    <h1>All Product in stock</h1>
     <table class="table table-striped">
       <thead>
         <tr>
           <th>Name</th>
           <th>category</th>
-          <th>Supplier Cap</th>
+          <th>Supplier</th>
           <th>Description</th>
           <th>Quantity in stock</th>
           <th>Actions</th>
@@ -22,9 +22,9 @@
       <tbody>
         {% for product in object_list %}
           <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.category }}</td>
-            <td>{{ product.supplier }}</td>
+            <td>{{ product.name | capfirst }}</td>
+            <td>{{ product.category | capfirst }}</td>
+            <td>{{ product.supplier | capfirst }}</td>
             <td>{{ product.description | truncatechars:25 }}</td>
             <td>{{ product.quantity_in_stock }}</td>
             <td>
