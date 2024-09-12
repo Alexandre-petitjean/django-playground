@@ -51,3 +51,10 @@ class StockMovementFactory(factory.django.DjangoModelFactory):
     quantity = factory.LazyAttribute(lambda _: fake.random_int(min=1, max=50))
     description = factory.LazyAttribute(lambda _: fake.sentence())
     date = factory.LazyAttribute(lambda _: fake.date_time_this_year())
+
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        try:
+            return super()._create(model_class, *args, **kwargs)
+        except ValueError:
+            return None

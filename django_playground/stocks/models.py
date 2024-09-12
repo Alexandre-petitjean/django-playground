@@ -2,6 +2,7 @@
 import uuid
 
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -25,29 +26,21 @@ class Supplier(models.Model):
 
 
 class Product(models.Model):
+    """
+    A product in stock. Related to :model:`stocks.Category` and :model:`stocks.Supplier`.
+    reorder_threshold: Quantity at which the product should be reordered.
+    auto_reorder: Whether the product should be reordered automatically.
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
-    category = models.ForeignKey(
-        Category,
-        related_name="products",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
-    supplier = models.ForeignKey(
-        Supplier,
-        related_name="products",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
+    category = models.ForeignKey(Category, related_name="products", on_delete=models.SET_NULL, null=True)
+    supplier = models.ForeignKey(Supplier, related_name="products", on_delete=models.SET_NULL, null=True)
     description = models.TextField(blank=True)
-    quantity_in_stock = models.IntegerField(default=0)
+    quantity_in_stock = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    reorder_threshold = models.IntegerField(
-        default=10,
-    )  # Quantity at which the product should be reordered.
-    auto_reorder = models.BooleanField(
-        default=False,
-    )  # Whether the product should be reordered automatically.
+    reorder_threshold = models.IntegerField(default=10)
+    auto_reorder = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -88,4 +81,9 @@ class StockMovement(models.Model):
             self.product.quantity_in_stock += self.quantity
         elif self.movement_type == self.MovementType.OUTGOING:
             self.product.quantity_in_stock -= self.quantity
+
+        if self.product.quantity_in_stock < 0:
+            msg = "Stock quantity cannot be negative"
+            raise ValueError(msg)
+
         self.product.save()
