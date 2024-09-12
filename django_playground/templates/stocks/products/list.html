@@ -16,6 +16,7 @@
           <th>Supplier</th>
           <th>Description</th>
           <th>Quantity in stock</th>
+          <th>Movement count</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -27,6 +28,7 @@
             <td>{{ product.supplier | capfirst }}</td>
             <td>{{ product.description | truncatechars:25 }}</td>
             <td>{{ product.quantity_in_stock }}</td>
+            <td>{{ product.stock_movements.count }}</td>
             <td>
               <a href="{% url 'stocks:product-detail' product.pk %}"
                  class="btn btn-primary">View</a>
