@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+  Create new stock movement for {{ object.product.name }}
+{% endblock title %}
+{% block content %}
+  <h1>Create new stock movement for {{ object.product.name }}</h1>
+  {% crispy form %}
+{% endblock content %}
