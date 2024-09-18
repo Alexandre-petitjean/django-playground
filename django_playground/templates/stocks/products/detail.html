@@ -20,18 +20,18 @@
         <span class="badge text-bg-secondary"><i class="bi bi-house me-3"></i>{{ object.supplier | capfirst }}</span>
       </h3>
     </div>
-    <br />
+    <br/>
     <div class="card">
       <div class="card-header">Description</div>
       <div class="card-body">{{ object.description }}</div>
     </div>
-    <br />
+    <br/>
     <div class="card">
       <div class="card-header">Quantity in stock</div>
       <div class="card-body">{{ object.quantity_in_stock }}</div>
     </div>
   </div>
-  <hr />
+  <hr/>
   <div>
     <h2>Stock movements</h2>
     <a href="{% url "stocks:stock-movements-new" object.pk %}"
@@ -48,7 +48,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for movement in object.stock_movements.all %}
+      {% for movement in stock_movements %}
         <tr>
           <th>{{ movement.date }}</th>
           <td>{{ movement.get_movement_type_display }}</td>

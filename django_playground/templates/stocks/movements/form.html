@@ -4,9 +4,9 @@
 {% load static %}
 
 {% block title %}
-  Create new stock movement for {{ object.product.name }}
+  Create new stock movement for <b>{{ product_name }}</b>
 {% endblock title %}
 {% block content %}
-  <h1>Create new stock movement for {{ object.product.name }}</h1>
+  <h1>Create new stock movement for <b>{{ product_name }}</b></h1>
   {% crispy form %}
 {% endblock content %}
