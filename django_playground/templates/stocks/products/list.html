@@ -7,7 +7,11 @@
 {% endblock title %}
 {% block content %}
   <div class="container">
-    <h1>All Product in stock</h1>
+    <h1>All Product in stock
+      <a href="{% url "stocks:products-stock-burn" %}" class="btn btn-danger">
+        <i class="bi bi-fire me-3"></i> Burn all stock
+      </a>
+    </h1>
     <table class="table table-striped">
       <thead>
         <tr>

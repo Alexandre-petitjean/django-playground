@@ -1,6 +1,7 @@
 # Create your views here.
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.timezone import now
+from django.views import View
 from django.views.generic import CreateView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -20,6 +21,24 @@ class StockListView(ListView):
     template_name = "stocks/products/list.html"
     paginate_by = 20
 
+class ProductsBurnStockView(View):
+    success_url = reverse_lazy('stocks:products')
+
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+
+        midnight = now().replace(hour=0, minute=0, second=0, microsecond=0)
+        products = Product.objects.all()
+        for product in products:
+            product.burn_stock(quantity=None, scheduled_date=midnight, reason="Burn all stock")
+
+        messages.success(request, f'The stock of {len(products)} products is scheduled to burn at midnight.')
+
+        return redirect(self.success_url)
+
 
 
 class StockDetailView(DetailView):
@@ -37,14 +56,14 @@ class StockDetailView(DetailView):
 
 # views.py
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.views.generic import FormView
 from .models import Product
 from .forms import ProductBurnForm
 
 
-class ProductBurnView(FormView):
+class ProductBurnFormView(FormView):
     template_name = "stocks/products/burn.html"
     form_class = ProductBurnForm
     success_url = reverse_lazy('stocks:products')
