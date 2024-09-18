@@ -19,16 +19,34 @@ License: MIT
 * Bootstrap 5
 * Docker
 * Sphinx
-* Sample App **Stock**
+* Sample App:  **Stock**
+* Asynchronous tasks with Celery and RabbitMQ
 
 ### Technologies and tools used in this project
 
-* [poetry](https://python-poetry.org/) as package manager.
-* [pyenv](https://github.com/pyenv/pyenv) to manage python versions.
-* [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv) to manage virtual environments.
+### Dependencies
+* [Poetry](https://python-poetry.org/) as package manager.
+* [Pyenv](https://github.com/pyenv/pyenv) to manage python versions.
+* [Pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv) to manage virtual environments.
+
+### Asynchronous tasks
+* [Celery](https://docs.celeryproject.org/en/stable/) to run asynchronous tasks.
+* [Rabbitmq](https://www.rabbitmq.com/) as message broker.
+
+### Monitoring
+* [Flower](https://flower.readthedocs.io/en/latest/) to monitor celery tasks.
+* [Prometheus](https://prometheus.io/) to monitor the application. `To be implemented`
+* [Grafana](https://grafana.com/) to visualize prometheus metrics. `To be implemented`
+
+### Build and run
 * [docker](https://www.docker.com/) to run the project in a container.
 * [docker-compose](https://docs.docker.com/compose/) to manage multiple containers.
+
+### Code quality
 * [pre-commit](https://pre-commit.com/) to run linters and formatters before commiting.
+
+### Documentation
+* [sphinx](https://www.sphinx-doc.org/en/master/) to generate documentation.
 
 ## Installation
 
@@ -46,7 +64,7 @@ sudo apt-get install -y build-essential curl graphviz graphviz-dev libpq-dev
 
 ### 2. Create a virtual environment
 
-> It's recommended to use a virtual environment to avoid conflicts with other projects.
+> It's recommended to use a **virtual environment** to avoid conflicts with other projects.
 
 ```bash
 pyenv install 3.12.5
@@ -65,7 +83,7 @@ Email : `admin@admin.local`
 
 Password : `admin`
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your **console** to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
 
 - To create a **superuser account**, use this command:
 
@@ -76,6 +94,7 @@ For convenience, you can keep your normal user logged in on Chrome and your supe
 
 ### 5. Start the development server
 
+// TODO
 
 ## Development
 
