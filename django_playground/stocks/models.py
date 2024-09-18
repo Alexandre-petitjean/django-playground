@@ -2,7 +2,7 @@
 import uuid
 
 from django.conf import settings
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 
@@ -25,6 +25,37 @@ class Supplier(models.Model):
         return self.name
 
 
+class Dimension(models.Model):
+    length = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[MinValueValidator(0)])
+    width = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[MinValueValidator(0)])
+    height = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[MinValueValidator(0)])
+
+    def __str__(self):
+        return f"{self.length} x {self.width} x {self.height}"
+
+
+class Review(models.Model):
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    comment = models.TextField(blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+    user_name = models.CharField(max_length=100)
+    user_mail = models.EmailField()
+
+    def __str__(self):
+        return f"{self.product} - {self.rating}"
+
+
+class Meta(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    bar_code = models.CharField(max_length=100, null=True)
+    qr_code = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return f"{self.created_at} - {self.updated_at}"
+
+
 class Product(models.Model):
     """
     A product in stock. Related to :model:`stocks.Category` and :model:`stocks.Supplier`.
@@ -33,17 +64,36 @@ class Product(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, related_name="products", on_delete=models.SET_NULL, null=True)
-    supplier = models.ForeignKey(Supplier, related_name="products", on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    quantity_in_stock = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    reorder_threshold = models.IntegerField(default=10)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    discount_percentage = models.DecimalField(
+        max_digits=5, decimal_places=2, validators=[MinValueValidator(0)], default=0
+    )
+    rating = models.DecimalField(
+        max_digits=3, decimal_places=2, validators=[MinValueValidator(0)]
+    )
+    quantity_in_stock = models.IntegerField()
+    reorder_threshold = models.IntegerField()
     auto_reorder = models.BooleanField(default=False)
+    tags = models.JSONField(default=list, blank=True)
+    brand = models.CharField(max_length=100, null=True)
+    sku = models.CharField(max_length=100, null=True)
+    weight = models.PositiveSmallIntegerField(default=0)
+    dimensions = models.ManyToManyField(Dimension, blank=True)
+    warranty_information = models.TextField(blank=True)
+    shipping_information = models.TextField(blank=True)
+    availability_status = models.CharField(max_length=100, default='In stock')
+    reviews = models.ManyToOneRel('Review', related_name='product', on_delete=models.CASCADE, to='stocks.Review',
+                                  field_name='product')
+    return_policy = models.TextField(blank=True)
+    minimum_order_quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+    meta = models.OneToOneField(Meta, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
 class StockMovement(models.Model):
