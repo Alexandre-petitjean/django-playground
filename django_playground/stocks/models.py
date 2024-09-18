@@ -7,6 +7,10 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
+from django.utils.timezone import now
+
+from django_playground.stocks import tasks
+from django_playground.stocks.tasks import burn_stock_task
 
 
 class Category(models.Model):
@@ -48,13 +52,12 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    @shared_task
-    def burn_stock_task_now(self, quantity=None, reason=None):
-        sleep(10)
-        if quantity is None:
-            self.quantity_in_stock  = 0
-            self.save()
-        return f"Burned {quantity} items from product {self.name} for reason: {reason}"
+    def burn_stock(self, quantity=None, scheduled_date=None ,reason=None):
+        return burn_stock_task.apply_async(
+            args=[self.id, quantity, reason],
+            eta=now() if scheduled_date is None else scheduled_date
+        )
+
 
 class StockMovement(models.Model):
     """

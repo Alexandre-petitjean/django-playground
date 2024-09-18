@@ -8,27 +8,6 @@
 {% block content %}
   <div class="container">
     <h1>Stock movements</h1>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Movement Type</th>
-          <th>Date</th>
-          <th>Product</th>
-          <th>Quantity</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for movement in object_list %}
-          <tr>
-            <td>{{ movement.movement_type }}</td>
-            <td>{{ movement.date }}</td>
-            <td>{{ movement.product }}</td>
-            <td>{{ movement.quantity }}</td>
-            <td>{{ movement.description }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    {% include "stocks/movements/block-list.html" with stock_movements=object_list %}
   </div>
 {% endblock content %}

@@ -1,10 +1,11 @@
 # Create your views here.
 from django.urls import reverse
-from django.views.generic import CreateView, TemplateView, FormView
+from django.utils.timezone import now
+from django.views.generic import CreateView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
-from django_playground.stocks.forms import StockMovementForm, ProductBurnForm
+from django_playground.stocks.forms import StockMovementForm
 from django_playground.stocks.models import Product
 from django_playground.stocks.models import StockMovement
 
@@ -18,6 +19,7 @@ class StockListView(ListView):
     queryset = Product.objects.prefetch_related("category", "supplier").all()
     template_name = "stocks/products/list.html"
     paginate_by = 20
+
 
 
 class StockDetailView(DetailView):
@@ -45,7 +47,7 @@ from .forms import ProductBurnForm
 class ProductBurnView(FormView):
     template_name = "stocks/products/burn.html"
     form_class = ProductBurnForm
-    success_url = reverse_lazy('products')
+    success_url = reverse_lazy('stocks:products')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -64,9 +66,8 @@ class ProductBurnView(FormView):
         scheduled_date = form.cleaned_data['scheduled_date']
         reason = form.cleaned_data['reason']
 
-        if scheduled_date is not None:
-            # Planifier la tâche de brûlage de stock
-            product.burn_stock_task_now.apply_async(args=[quantity, reason], eta=scheduled_date)
+        product.burn_stock(quantity, scheduled_date, reason)
+
 
         # Ajouter un message de succès
         messages.success(self.request, f'The stock burn task for {product.name} has been scheduled.')
