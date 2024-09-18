@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+  Burn stock for <b>{{ product_name }}</b>
+{% endblock title %}
+{% block content %}
+  <h1>Burn stock for <b>{{ product_name }}</b> actual stock: <b>{{ product_quantity }}</b></h1>
+  {% crispy form %}
+{% endblock content %}

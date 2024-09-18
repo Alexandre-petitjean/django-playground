@@ -1,12 +1,16 @@
 # Create your views here.
 from django.urls import reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, TemplateView, FormView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
-from django_playground.stocks.forms import StockMovementForm
+from django_playground.stocks.forms import StockMovementForm, ProductBurnForm
 from django_playground.stocks.models import Product
 from django_playground.stocks.models import StockMovement
+
+
+class StockDashboard(TemplateView):
+    template_name = "stocks/dashboard.html"
 
 
 class StockListView(ListView):
@@ -27,6 +31,47 @@ class StockDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['stock_movements'] = self.object.stock_movements.all().order_by("-date")
         return context
+
+
+# views.py
+from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.views.generic import FormView
+from .models import Product
+from .forms import ProductBurnForm
+
+
+class ProductBurnView(FormView):
+    template_name = "stocks/products/burn.html"
+    form_class = ProductBurnForm
+    success_url = reverse_lazy('products')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Gestion des exceptions pour le cas où le produit n'existe pas
+        product = get_object_or_404(Product, pk=self.kwargs.get('pk'))
+        context['product_name'] = product.name
+        context['product_quantity'] = product.quantity_in_stock
+        return context
+
+    def form_valid(self, form):
+        # Récupérer le produit correspondant à l'ID passé dans les kwargs
+        product = get_object_or_404(Product, pk=self.kwargs.get('pk'))
+
+        # Récupérer les données du formulaire
+        quantity = form.cleaned_data['quantity']
+        scheduled_date = form.cleaned_data['scheduled_date']
+        reason = form.cleaned_data['reason']
+
+        if scheduled_date is not None:
+            # Planifier la tâche de brûlage de stock
+            product.burn_stock_task_now.apply_async(args=[quantity, reason], eta=scheduled_date)
+
+        # Ajouter un message de succès
+        messages.success(self.request, f'The stock burn task for {product.name} has been scheduled.')
+
+        return super().form_valid(form)
 
 
 class StockMovementListView(ListView):

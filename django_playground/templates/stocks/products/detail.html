@@ -9,6 +9,7 @@
   <div class="container">
     <h1>
       <i class="bi bi-box-seam me-3"></i>{{ object.name | capfirst }}
+      <a href="{% url "stocks:product-stock-burn" object.pk %}" class="btn btn-danger"><i class="bi bi-fire me-3"></i> Burn stock</a>
     </h1>
     <div class="container">
       <h3>
@@ -34,8 +35,7 @@
   <hr/>
   <div>
     <h2>Stock movements</h2>
-    <a href="{% url "stocks:stock-movements-new" object.pk %}"
-       class="btn btn-primary">New movement</a>
+    <a href="{% url "stocks:product-new-movement" object.pk %}" class="btn btn-primary">New movement</a>
   </div>
   <table class="table">
     <thead>

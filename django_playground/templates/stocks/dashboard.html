@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+  Stock App Dashboard
+{% endblock title %}
+{% block content %}
+  <h1>Stock App Actions</h1>
+  <div class="col">
+    <a href="{% url 'stocks:products' %}"><h2>Products</h2></a>
+    <a href="{% url 'stocks:stock-movements' %}"><h2>Stock Movements</h2></a>
+  </div>
+  <div class="col">
+    <h1>Stock App Model</h1>
+    <div class="alert alert-info" role="alert">To be added...</div>
+  </div>
+{% endblock content %}
