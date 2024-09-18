@@ -1,7 +1,10 @@
+from datetime import timedelta
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
 from django.forms import ModelForm, Form
+from django.utils.timezone import now
 
 from django_playground.stocks.models import StockMovement
 
@@ -35,13 +38,16 @@ class StockMovementForm(ModelForm):
 class ProductBurnForm(Form):
     quantity = forms.IntegerField(
         required=False,
+        initial=10,
         help_text="Quantity to burn, if not specified all the stock will be burned."
     )
-    scheduled_date = forms.DateField(
+    scheduled_date = forms.DateTimeField(
         required=False,
+        widget=forms.DateInput(attrs={'type': 'datetime-local'}),
+        initial=now() + timedelta(minutes=1),
         help_text="Date when the stock will be burned. If not specified, the stock will be burned immediately."
     )
-    reason = forms.CharField(widget=forms.Textarea)
+    reason = forms.CharField(widget=forms.Textarea, initial="No reason provided.")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

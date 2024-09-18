@@ -1,0 +1,22 @@
+<table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Movement Type</th>
+          <th>Date</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for movement in stock_movements %}
+          <tr>
+            <td>{{ movement.movement_type }}</td>
+            <td>{{ movement.date }}</td>
+            <td>{{ movement.product }}</td>
+            <td>{{ movement.quantity }}</td>
+            <td>{{ movement.description }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
