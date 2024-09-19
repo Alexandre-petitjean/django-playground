@@ -32,7 +32,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Product
 
-    name = factory.LazyAttribute(lambda _: fake.unique.word())
+    title = factory.LazyAttribute(lambda _: fake.unique.word())
     category = factory.LazyFunction(lambda: Category.objects.order_by("?").first())
     supplier = factory.LazyFunction(lambda: Supplier.objects.order_by("?").first())
     description = factory.LazyAttribute(lambda _: fake.text())

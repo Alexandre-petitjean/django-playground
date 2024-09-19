@@ -1,11 +1,11 @@
 # tasks.py
-from celery import shared_task
 from time import sleep
 
+from celery import shared_task
 
 
 @shared_task
-def burn_stock_task(product_id, quantity:int=None, reason:str=None) -> str:
+def burn_stock_task(product_id, quantity: int | None = None, reason: str | None = None) -> str:
     from django_playground.stocks.models import Product
 
     sleep(10)
@@ -16,4 +16,4 @@ def burn_stock_task(product_id, quantity:int=None, reason:str=None) -> str:
     else:
         prod.quantity_in_stock -= quantity
     prod.save()
-    return f"Burned {quantity} items from product {prod.name} for reason: {reason}"
+    return f"Burned {quantity} items from product {prod} for reason: {reason}"
