@@ -1,15 +1,13 @@
 # Create your models here.
 import uuid
-from time import sleep
 
-from celery import shared_task
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.timezone import now
 
-from django_playground.stocks import tasks
 from django_playground.stocks.tasks import burn_stock_task
 
 
@@ -42,10 +40,10 @@ class Dimension(models.Model):
 
 
 class Review(models.Model):
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    product = models.ForeignKey("Product", on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField(blank=True)
-    date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now())
     user_name = models.CharField(max_length=100)
     user_mail = models.EmailField()
 
@@ -53,11 +51,11 @@ class Review(models.Model):
         return f"{self.product} - {self.rating}"
 
 
-class Meta(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    bar_code = models.CharField(max_length=100, null=True)
-    qr_code = models.CharField(max_length=100, null=True)
+class MetaInfo(models.Model):
+    created_at = models.DateTimeField(default=timezone.now())
+    updated_at = models.DateTimeField(default=timezone.now())
+    bar_code = models.CharField(max_length=100, default="")
+    qr_code = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return f"{self.created_at} - {self.updated_at}"
@@ -77,35 +75,45 @@ class Product(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     discount_percentage = models.DecimalField(
-        max_digits=5, decimal_places=2, validators=[MinValueValidator(0)], default=0
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        default=0,
     )
     rating = models.DecimalField(
-        max_digits=3, decimal_places=2, validators=[MinValueValidator(0)]
+        max_digits=3,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
     )
     quantity_in_stock = models.IntegerField()
     reorder_threshold = models.IntegerField()
     auto_reorder = models.BooleanField(default=False)
     tags = models.JSONField(default=list, blank=True)
-    brand = models.CharField(max_length=100, null=True)
-    sku = models.CharField(max_length=100, null=True)
+    brand = models.CharField(max_length=100, default="")
+    sku = models.CharField(max_length=100, default="")
     weight = models.PositiveSmallIntegerField(default=0)
     dimensions = models.ManyToManyField(Dimension, blank=True)
     warranty_information = models.TextField(blank=True)
     shipping_information = models.TextField(blank=True)
-    availability_status = models.CharField(max_length=100, default='In stock')
-    reviews = models.ManyToOneRel('Review', related_name='product', on_delete=models.CASCADE, to='stocks.Review',
-                                  field_name='product')
+    availability_status = models.CharField(max_length=100, default="In stock")
+    reviews = models.ManyToOneRel(
+        "Review",
+        related_name="product",
+        on_delete=models.CASCADE,
+        to="stocks.Review",
+        field_name="product",
+    )
     return_policy = models.TextField(blank=True)
     minimum_order_quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
-    meta = models.OneToOneField(Meta, on_delete=models.CASCADE, null=True)
+    meta = models.OneToOneField(MetaInfo, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.title
 
-    def burn_stock(self, quantity=None, scheduled_date=None ,reason=None):
+    def burn_stock(self, quantity=None, scheduled_date=None, reason=None):
         return burn_stock_task.apply_async(
             args=[self.id, quantity, reason],
-            eta=now() if scheduled_date is None else scheduled_date
+            eta=now() if scheduled_date is None else scheduled_date,
         )
 
 
@@ -119,10 +127,10 @@ class StockMovement(models.Model):
         INCOMING = "in", "Incoming"
         OUTGOING = "out", "Outgoing"
 
-    product = models.ForeignKey(Product,related_name="stock_movements",on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name="stock_movements", on_delete=models.CASCADE)
     movement_type = models.CharField(max_length=3, choices=MovementType, default=MovementType.INCOMING, blank=False)
     quantity = models.IntegerField()
-    date = models.DateTimeField(default=timezone.now())
+    created_at = models.DateTimeField(default=timezone.now())
     description = models.TextField(blank=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
