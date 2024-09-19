@@ -7,6 +7,5 @@ set -o nounset
 
 python manage.py migrate
 python manage.py generate_default_superuser
-python manage.py generate_test_data --init
 
 exec python manage.py runserver_plus 0.0.0.0:8000
