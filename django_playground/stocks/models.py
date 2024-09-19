@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.timezone import now
 
 from django_playground.stocks.tasks import burn_stock_task
+from django_playground.stocks.tasks import order_stock_task
 
 
 class Category(models.Model):
@@ -59,8 +62,14 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
-    def burn_stock(self, quantity=None, scheduled_date=None, reason=None):
+    def burn_stock(self, quantity: int, scheduled_date: datetime | None, reason: str):
         return burn_stock_task.apply_async(
+            args=[self.id, quantity, reason],
+            eta=now() if scheduled_date is None else scheduled_date,
+        )
+
+    def order_stock(self, quantity: int, scheduled_date: datetime | None, reason: str):
+        return order_stock_task.apply_async(
             args=[self.id, quantity, reason],
             eta=now() if scheduled_date is None else scheduled_date,
         )
