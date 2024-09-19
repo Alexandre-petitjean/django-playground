@@ -1,9 +1,5 @@
 # Create your models here.
-import uuid
-
 from django.conf import settings
-from django.core.validators import MaxValueValidator
-from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.timezone import now
@@ -12,11 +8,12 @@ from django_playground.stocks.tasks import burn_stock_task
 
 
 class Category(models.Model):
+    slug = models.SlugField(max_length=100, unique=True)
     name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True)
+    description = models.CharField(max_length=255, default="", blank=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.slug} - {self.name}"
 
 
 class Supplier(models.Model):
@@ -25,40 +22,11 @@ class Supplier(models.Model):
     phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
     address = models.TextField(blank=True)
+    order_schedule_time = models.DateTimeField(default=timezone.now)
+    estimated_delivery_time = models.IntegerField(default=2, blank=True)
 
     def __str__(self):
         return self.name
-
-
-class Dimension(models.Model):
-    length = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[MinValueValidator(0)])
-    width = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[MinValueValidator(0)])
-    height = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[MinValueValidator(0)])
-
-    def __str__(self):
-        return f"{self.length} x {self.width} x {self.height}"
-
-
-class Review(models.Model):
-    product = models.ForeignKey("Product", on_delete=models.CASCADE)
-    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-    comment = models.TextField(blank=True)
-    created_at = models.DateTimeField(default=timezone.now())
-    user_name = models.CharField(max_length=100)
-    user_mail = models.EmailField()
-
-    def __str__(self):
-        return f"{self.product} - {self.rating}"
-
-
-class MetaInfo(models.Model):
-    created_at = models.DateTimeField(default=timezone.now())
-    updated_at = models.DateTimeField(default=timezone.now())
-    bar_code = models.CharField(max_length=100, default="")
-    qr_code = models.CharField(max_length=100, default="")
-
-    def __str__(self):
-        return f"{self.created_at} - {self.updated_at}"
 
 
 class Product(models.Model):
@@ -68,44 +36,26 @@ class Product(models.Model):
     auto_reorder: Whether the product should be reordered automatically.
     """
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    discount_percentage = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        validators=[MinValueValidator(0)],
-        default=0,
-    )
-    rating = models.DecimalField(
-        max_digits=3,
-        decimal_places=2,
-        validators=[MinValueValidator(0)],
-    )
-    quantity_in_stock = models.IntegerField()
-    reorder_threshold = models.IntegerField()
-    auto_reorder = models.BooleanField(default=False)
-    tags = models.JSONField(default=list, blank=True)
-    brand = models.CharField(max_length=100, default="")
-    sku = models.CharField(max_length=100, default="")
-    weight = models.PositiveSmallIntegerField(default=0)
-    dimensions = models.ManyToManyField(Dimension, blank=True)
-    warranty_information = models.TextField(blank=True)
-    shipping_information = models.TextField(blank=True)
-    availability_status = models.CharField(max_length=100, default="In stock")
-    reviews = models.ManyToOneRel(
-        "Review",
-        related_name="product",
-        on_delete=models.CASCADE,
-        to="stocks.Review",
-        field_name="product",
-    )
-    return_policy = models.TextField(blank=True)
-    minimum_order_quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
-    meta = models.OneToOneField(MetaInfo, on_delete=models.CASCADE, null=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    category = models.CharField(max_length=50)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    rating = models.DecimalField(max_digits=3, decimal_places=2)
+    stock = models.IntegerField()
+    tags = models.JSONField()
+    brand = models.CharField(max_length=100)
+    sku = models.CharField(max_length=100)
+    weight = models.DecimalField(max_digits=6, decimal_places=2)
+    dimensions = models.JSONField()
+    warranty_information = models.CharField(max_length=255, blank=True, default="")
+    shipping_information = models.CharField(max_length=255, blank=True, default="")
+    availability_status = models.CharField(max_length=50, blank=True, default="")
+    return_policy = models.CharField(max_length=255, blank=True, default="")
+    minimum_order_quantity = models.IntegerField(blank=True, null=True)
+    meta = models.JSONField()
+    thumbnail = models.URLField(blank=True)
+    images = models.JSONField()
 
     def __str__(self):
         return self.title
@@ -130,26 +80,21 @@ class StockMovement(models.Model):
     product = models.ForeignKey(Product, related_name="stock_movements", on_delete=models.CASCADE)
     movement_type = models.CharField(max_length=3, choices=MovementType, default=MovementType.INCOMING, blank=False)
     quantity = models.IntegerField()
-    created_at = models.DateTimeField(default=timezone.now())
+    created_at = models.DateTimeField(default=timezone.now)
     description = models.TextField(blank=True)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.get_movement_type_display()} - {self.product.name} - {self.quantity} - {self.date}"
+        return f"{self.created_at} {self.get_movement_type_display()} - {self.quantity} of {self.product.title}"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.movement_type == self.MovementType.INCOMING:
-            self.product.quantity_in_stock += self.quantity
+            self.product.stock += self.quantity
         elif self.movement_type == self.MovementType.OUTGOING:
-            self.product.quantity_in_stock -= self.quantity
+            self.product.stock -= self.quantity
 
-        if self.product.quantity_in_stock < 0:
+        if self.product.stock < 0:
             msg = "Stock quantity cannot be negative"
             raise ValueError(msg)
 
