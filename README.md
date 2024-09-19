@@ -1,5 +1,6 @@
 # Django Playground
 
+> [!CAUTION]
 > This app is not meant to be used in production, it's just a playground to test Django feature or create POC.
 
 
@@ -24,28 +25,28 @@ License: MIT
 
 ### Technologies and tools used in this project
 
-### Dependencies
+#### Dependencies
 * [Poetry](https://python-poetry.org/) as package manager.
 * [Pyenv](https://github.com/pyenv/pyenv) to manage python versions.
 * [Pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv) to manage virtual environments.
 
-### Asynchronous tasks
+#### Asynchronous tasks
 * [Celery](https://docs.celeryproject.org/en/stable/) to run asynchronous tasks.
 * [Rabbitmq](https://www.rabbitmq.com/) as message broker.
 
-### Monitoring
+#### Monitoring
 * [Flower](https://flower.readthedocs.io/en/latest/) to monitor celery tasks.
 * [Prometheus](https://prometheus.io/) to monitor the application. `To be implemented`
 * [Grafana](https://grafana.com/) to visualize prometheus metrics. `To be implemented`
 
-### Build and run
+#### Build and run
 * [docker](https://www.docker.com/) to run the project in a container.
 * [docker-compose](https://docs.docker.com/compose/) to manage multiple containers.
 
-### Code quality
+#### Code quality
 * [pre-commit](https://pre-commit.com/) to run linters and formatters before commiting.
 
-### Documentation
+#### Documentation
 * [sphinx](https://www.sphinx-doc.org/en/master/) to generate documentation.
 
 ## Installation
