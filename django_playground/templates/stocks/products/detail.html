@@ -7,35 +7,30 @@
 {% endblock title %}
 {% block content %}
   <div class="container">
-    <h1>
-      <i class="bi bi-box-seam me-3"></i>{{ object.name | capfirst }}
-      <a href="{% url "stocks:product-stock-burn" object.pk %}" class="btn btn-danger"><i class="bi bi-fire me-3"></i> Burn stock</a>
-    </h1>
-    <div class="container">
-      <h3>
-        <span class="badge text-bg-primary"><i class="bi bi-tag me-3"></i>{{ object.category | capfirst }}</span>
-      </h3>
+    <div class="d-flex flex-row justify-content-between align-items-center">
+      <h1>{{ object.title | capfirst }}</h1>
+      <div>
+        <a href="{% url "stocks:product-stock-burn" object.pk %}"
+           class="btn btn-danger me-3">
+          <i class="bi bi-fire"></i> Burn stock
+        </a>
+        <a href="{% url "stocks:product-stock-burn" object.pk %}"
+           class="btn btn-primary">
+          <i class="bi bi-currency-dollar"></i> Order stock
+        </a>
+      </div>
     </div>
-    <div class="container">
-      <h3>
-        <span class="badge text-bg-secondary"><i class="bi bi-house me-3"></i>{{ object.supplier | capfirst }}</span>
-      </h3>
-    </div>
-    <br/>
+    <br />
     <div class="card">
       <div class="card-header">Description</div>
       <div class="card-body">{{ object.description }}</div>
     </div>
-    <br/>
+    <br />
     <div class="card">
       <div class="card-header">Quantity in stock</div>
-      <div class="card-body">{{ object.quantity_in_stock }}</div>
+      <div class="card-body">{{ object.stock }}</div>
     </div>
-  </div>
-  <hr/>
-  <div>
-    <h2>Stock movements</h2>
-    <a href="{% url "stocks:product-new-movement" object.pk %}" class="btn btn-primary">New movement</a>
+    <hr />
   </div>
   {% include "stocks/movements/block-list.html" %}
 {% endblock content %}

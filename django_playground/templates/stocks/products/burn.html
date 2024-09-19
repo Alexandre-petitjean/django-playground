@@ -4,9 +4,11 @@
 {% load static %}
 
 {% block title %}
-  Burn stock for <b>{{ product_name }}</b>
+  Burn stock for {{ product_name }}
 {% endblock title %}
 {% block content %}
-  <h1>Burn stock for <b>{{ product_name }}</b> actual stock: <b>{{ product_quantity }}</b></h1>
+  <h1>
+    Burn stock for <span class="badge text-bg-info">{{ product_name }}</span> actual stock: <span class="badge text-bg-info">{{ product_quantity }}</span>
+  </h1>
   {% crispy form %}
 {% endblock content %}

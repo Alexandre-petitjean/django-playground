@@ -1,4 +1,3 @@
-# Create your models here.
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -44,7 +43,7 @@ class Product(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=2)
     stock = models.IntegerField()
     tags = models.JSONField()
-    brand = models.CharField(max_length=100)
+    brand = models.CharField(max_length=100, blank=True, default="")
     sku = models.CharField(max_length=100)
     weight = models.DecimalField(max_digits=6, decimal_places=2)
     dimensions = models.JSONField()
@@ -54,7 +53,7 @@ class Product(models.Model):
     return_policy = models.CharField(max_length=255, blank=True, default="")
     minimum_order_quantity = models.IntegerField(blank=True, null=True)
     meta = models.JSONField()
-    thumbnail = models.URLField(blank=True)
+    thumbnail = models.URLField(blank=True, default="https://dummyjson.com/image/150")
     images = models.JSONField()
 
     def __str__(self):
