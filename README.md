@@ -63,7 +63,7 @@ sudo apt-get install -y build-essential curl graphviz graphviz-dev libpq-dev
 
 // TODO
 
-### 2. Create a virtual environment
+### 2. Create a virtual environment and install dependencies
 
 > It's recommended to use a **virtual environment** to avoid conflicts with other projects.
 
@@ -74,9 +74,7 @@ pyenv local django-playground-3.12.5
 poetry install
 ```
 
-### 3. Install dependencies
-
-### 4. Setting Up Your Users
+### 3. Setting Up Your Users
 
 A **default superuser** is created with the following credentials
 
@@ -93,9 +91,19 @@ Password : `admin`
 For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
 
 
-### 5. Start the development server
+### 4. Start the development server
 
-// TODO
+```bash
+docker compose -f compose.local.yaml up
+```
+
+### 6. Access the application
+
+| Service  | URL                                              |
+|----------|--------------------------------------------------|
+| Django   | [http://localhost:8000](http://localhost:8000)   |
+| Flower   | [http://localhost:5555](http://localhost:5555)   |
+| RabbitMQ | [http://localhost:15672](http://localhost:15672) |
 
 ## Development
 
