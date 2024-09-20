@@ -37,46 +37,42 @@ class StockMovementForm(ModelForm):
         return instance
 
 
-class ProductBurnForm(Form):
-    quantity = forms.IntegerField(
-        required=False,
-        initial=10,
-        help_text="Quantity to burn, if not specified all the stock will be burned.",
-    )
+class ProductStockForm(Form):
+    quantity = forms.IntegerField(required=False, initial=10)
     scheduled_date = forms.DateTimeField(
         required=False,
         widget=forms.DateInput(attrs={"type": "datetime-local"}),
         initial=timezone.now() + timedelta(minutes=1),
-        help_text="Date when the stock will be burned. If not specified, the stock will be burned immediately.",
+        validators=[MinValueValidator(timezone.now())],
     )
     reason = forms.CharField(widget=forms.Textarea, initial="No reason provided.")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_id = "form-product-burn"
+        self.helper.form_id = "form-product-stock"
         self.helper.form_method = "post"
         self.helper.add_input(Submit("submit", "Submit"))
 
 
-class ProductOrderForm(Form):
-    quantity = forms.IntegerField(
-        required=False,
-        initial=10,
-        validators=[MinValueValidator(1)],
-        help_text="Quantity to order, must be superior or equal to 1.",
-    )
-    scheduled_date = forms.DateTimeField(
-        required=False,
-        widget=forms.DateInput(attrs={"type": "datetime-local"}),
-        initial=timezone.now() + timedelta(minutes=1),
-        help_text="Date when the stock will be order. If not specified, the stock will be ordered immediately.",
-    )
-    reason = forms.CharField(widget=forms.Textarea, initial="Simple restock.")
-
+class ProductBurnForm(ProductStockForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_id = "form-product-order"
-        self.helper.form_method = "post"
-        self.helper.add_input(Submit("submit", "Submit"))
+
+        self.fields["quantity"].help_text = "Quantity to burn, if not specified all the stock will be burned."
+        self.fields[
+            "scheduled_date"
+        ].help_text = "Date when the stock will be burned. If not specified, the stock will be burned immediately."
+        self.fields["reason"].initial = "Stock burn for no reason."
+
+
+class ProductOrderForm(ProductStockForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["quantity"].help_text = "Quantity to order, must be superior or equal to 1."
+        self.fields["quantity"].validators = [MinValueValidator(1)]
+        self.fields[
+            "scheduled_date"
+        ].help_text = "Date when the stock will be order. If not specified, the stock will be ordered immediately."
+        self.fields["reason"].initial = "Simple restock."

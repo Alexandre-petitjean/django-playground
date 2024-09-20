@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -28,17 +30,17 @@ class StockListView(ListView):
     paginate_by = 20
 
 
-class ProductsBurnStockView(View):
+class ProductsBurnAllStockView(View):
     success_url = reverse_lazy("stocks:products")
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        midnight = now().replace(hour=0, minute=0, second=0, microsecond=0)
+        midnight = now().replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
         products = Product.objects.all()
         for product in products:
-            product.burn_stock(quantity=None, scheduled_date=midnight, reason="Burn all stock")
+            product.burn_stock(quantity=product.stock, scheduled_date=midnight, reason="Burn all stock")
 
         messages.success(request, f"The stock of {len(products)} products is scheduled to burn at midnight.")
 
