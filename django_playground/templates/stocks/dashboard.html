@@ -6,10 +6,12 @@
   Stock App Dashboard
 {% endblock title %}
 {% block content %}
-  <h1>Stock App Actions</h1>
+  <h1>Stock App</h1>
+  <div class="alert alert-info">This App is made to show how to use Celery task inside a Django app.</div>
   <div class="col">
-    <a href="{% url 'stocks:products' %}"><h2>Products</h2></a>
-    <a href="{% url 'stocks:stock-movements' %}"><h2>Stock Movements</h2></a>
+    <a href="{% url 'stocks:products' %}">
+      <h2>Products</h2>
+    </a>
   </div>
   <div class="col">
     <h1>Stock App Model</h1>

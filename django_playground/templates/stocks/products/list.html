@@ -6,52 +6,77 @@
   All Stocks
 {% endblock title %}
 {% block content %}
-  <div class="container">
-    <div class="d-flex flex-row justify-content-between align-items-center">
-      <h1>All Product in stock</h1>
-      <a href="{% url 'stocks:products-stock-burn' %}" class="btn btn-danger">
-        <i class="bi bi-fire"></i> Burn all stock
-      </a>
-    </div>
-    <table class="table table-striped">
-      <thead>
+  <div class="d-flex flex-row justify-content-between align-items-center">
+    <h1>All Product in stock</h1>
+    <a href="{% url 'stocks:products-stock-burn' %}" class="btn btn-danger">
+      <i class="bi bi-fire"></i> Burn all stock
+    </a>
+  </div>
+  <div class="d-flex flex-wrap gap-3">
+    {% for product in object_list %}
+      <div class="child card">
+        <div class="card-header">
+          {{ product.title | capfirst }} <span class="badge bg-dark">{{ product.rating }}</span>
+        </div>
+        <div class="card-body">{{ product.description | truncatechars:25 }}</div>
+        <div class="card-footer">{{ product.stock }}</div>
+      </div>
+    {% endfor %}
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Tags</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Quantity in stock</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in object_list %}
         <tr>
-          <th>Name</th>
-          <th>category</th>
-          <th>Description</th>
-          <th>Quantity in stock</th>
-          <th>Movement count</th>
-          <th>Actions</th>
+          <td>{{ product.title | capfirst }}</td>
+          <td>{{ product.category | capfirst }}</td>
+          <td>{{ product.tags | capfirst }}</td>
+          <td>{{ product.price | capfirst }} €</td>
+          <td>{{ product.description | truncatechars:25 }}</td>
+          <td>{{ product.stock }}</td>
+          <td>
+            <a href="{% url 'stocks:product-detail' product.pk %}"
+               class="btn btn-primary">View</a>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        {% for product in object_list %}
-          <tr>
-            <td>{{ product.title | capfirst }}</td>
-            <td>{{ product.category | capfirst }}</td>
-            <td>{{ product.description | truncatechars:25 }}</td>
-            <td>{{ product.stock }}</td>
-            <td>{{ product.stock_movements.count }}</td>
-            <td>
-              <a href="{% url 'stocks:product-detail' product.pk %}"
-                 class="btn btn-primary">View</a>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <div class="pagination">
-      <span class="step-links">
-        {% if page_obj.has_previous %}
-          <a href="?page=1">« first</a>
-          <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-        <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
-        {% if page_obj.has_next %}
-          <a href="?page={{ page_obj.next_page_number }}">next</a>
-          <a href="?page={{ page_obj.paginator.num_pages }}">last »</a>
-        {% endif %}
-      </span>
-    </div>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+            <span aria-hidden="true">«</span>
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page=1">1</a>
+        </li>
+      {% endif %}
+      <li class="page-item active">
+        <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+      </li>
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+            <span aria-hidden="true">»</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
   </div>
 {% endblock content %}
