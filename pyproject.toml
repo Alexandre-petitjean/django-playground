@@ -32,7 +32,7 @@ django-redis = "^5.4.0"  # https://github.com/jazzband/django-redis
 
 # Celery
 # ------------------------------------------------------------------------------
-celery = {extras = ["django", "librabbitmq"], version = "^5.4.0"}  # https://github.com/celery/celery
+celery = {extras = ["librabbitmq"], version = "^5.4.0"}  # https://github.com/celery/celery
 django-celery-beat = "^2.7.0"  # https://github.com/celery/django-celery-beat
 django-celery-results = "^2.5.1" # https://github.com/celery/django-celery-results
 flower = "^2.0.1"  # https://github.com/mher/flower
