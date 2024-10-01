@@ -12,19 +12,7 @@
   border-color: #eed3d7;
 }
 
-
-.child {
-  flex: 0 0 100%; /* Par défaut, les enfants prennent 100% de la largeur (une colonne par ligne sur mobile) */
-}
-
-@media (min-width: 576px) {
-  .child {
-    flex: 0 0 50%; /* Sur les écrans sm, deux colonnes */
-  }
-}
-
-@media (min-width: 768px) {
-  .child {
-    flex: 0 0 30%; /* Sur les écrans md et plus, trois colonnes */
-  }
+.card-img-top {
+    height: 300px;
+    object-fit: scale-down;
 }

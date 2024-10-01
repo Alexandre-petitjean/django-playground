@@ -12,46 +12,30 @@
       <i class="bi bi-fire"></i> Burn all stock
     </a>
   </div>
-  <div class="d-flex flex-wrap gap-3">
+  <hr />
+  <div class="row">
     {% for product in object_list %}
-      <div class="child card">
-        <div class="card-header">
-          {{ product.title | capfirst }} <span class="badge bg-dark">{{ product.rating }}</span>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <img src="{{ product.thumbnail }}"
+               class="card-img-top"
+               alt="{{ product.title }}" />
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ product.title }}</h5>
+            <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+            <p class="card-text">
+              <strong>Prix :</strong> {{ product.price }} €
+            </p>
+            <p class="card-text">
+              <strong>En stock :</strong> {{ product.stock }}
+            </p>
+            <a href="{% url 'stocks:product-detail' product.id %}"
+               class="btn btn-primary mt-auto">Voir Détails</a>
+          </div>
         </div>
-        <div class="card-body">{{ product.description | truncatechars:25 }}</div>
-        <div class="card-footer">{{ product.stock }}</div>
       </div>
     {% endfor %}
   </div>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Tags</th>
-        <th>Price</th>
-        <th>Description</th>
-        <th>Quantity in stock</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for product in object_list %}
-        <tr>
-          <td>{{ product.title | capfirst }}</td>
-          <td>{{ product.category | capfirst }}</td>
-          <td>{{ product.tags | capfirst }}</td>
-          <td>{{ product.price | capfirst }} €</td>
-          <td>{{ product.description | truncatechars:25 }}</td>
-          <td>{{ product.stock }}</td>
-          <td>
-            <a href="{% url 'stocks:product-detail' product.pk %}"
-               class="btn btn-primary">View</a>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
   <div class="d-flex justify-content-center">
     <ul class="pagination">
       {% if page_obj.has_previous %}
