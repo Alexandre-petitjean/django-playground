@@ -30,19 +30,7 @@
             </div>
             <hr />
             <p class="card-text">{{ product.description|truncatechars:100 }}</p>
-            {% if product.stock > 10 %}
-              <p class="card-text text-success">
-                <strong>En stock, {{ product.stock }} unités restantes</strong>
-              </p>
-            {% elif product.stock > 0 %}
-              <p class="card-text text-warning">
-                <strong>Seulement {{ product.stock }} unités restantes</strong>
-              </p>
-            {% else %}
-              <p class="card-text text-danger">
-                <strong>Rupture de stock</strong>
-              </p>
-            {% endif %}
+            {% include "stocks/products/components/stock-status.html" with product=product %}
             <a href="{% url 'stocks:product-detail' product.id %}"
                class="btn btn-primary mt-auto">Voir Détails</a>
           </div>

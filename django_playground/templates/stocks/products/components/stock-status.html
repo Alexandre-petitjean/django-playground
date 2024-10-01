@@ -1,0 +1,13 @@
+{% if product.stock > 10 %}
+  <p class="text-success">
+    <strong>En stock, {{ product.stock }} unités restantes.</strong>
+  </p>
+{% elif product.stock > 0 %}
+  <p class="text-warning">
+    <strong>Seulement {{ object.stock }} restants.</strong>
+  </p>
+{% else %}
+  <p class="text-danger">
+    <strong>Rupture de stock.</strong>
+  </p>
+{% endif %}

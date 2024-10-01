@@ -22,26 +22,13 @@
           <span>({{ object.rating }}/5)</span>
         </div>
         <h3 class="text-primary">{{ object.price }} €</h3>
-        {% if object.stock > 10 %}
-          <p class="text-success">
-            <strong>En stock</strong>
-          </p>
-        {% elif object.stock > 0 %}
-          <p class="text-warning">
-            <strong>Seulement {{ object.stock }} restants</strong>
-          </p>
-        {% else %}
-          <p class="text-danger">
-            <strong>Rupture de stock</strong>
-          </p>
-        {% endif %}
         <div class="my-4">
           <a href="{% url 'stocks:product-stock-order' object.pk %}"
              class="btn btn-success btn-lg mr-2">
             <i class="fas fa-cart-plus"></i> Commander
           </a>
           <a href="{% url 'stocks:product-stock-burn' object.pk %}"
-             class="btn btn-outline-danger btn-lg">
+             class="btn btn-outline-danger btn-lg {% if object.stock == 0 %}disabled{% endif %}">
             <i class="fas fa-fire"></i> Réduire le stock
           </a>
         </div>
