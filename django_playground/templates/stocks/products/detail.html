@@ -3,35 +3,86 @@
 {% load static %}
 
 {% block title %}
-  All Stocks
+  {{ object.title|capfirst }} - Détails du Produit
 {% endblock title %}
 {% block content %}
-  <div class="container">
-    <div class="d-flex flex-row justify-content-between align-items-center">
-      <h1>{{ object.title | capfirst }}</h1>
-      <div>
-        <a href="{% url "stocks:product-stock-burn" object.pk %}"
-           class="btn btn-danger me-3">
-          <i class="bi bi-fire"></i> Burn stock
-        </a>
-        <a href="{% url "stocks:product-stock-order" object.pk %}"
-           class="btn btn-primary">
-          <i class="bi bi-currency-dollar"></i> Order stock
-        </a>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-5">
+        <div class="card">
+          <img src="{{ object.thumbnail }}"
+               class="card-img-top"
+               alt="{{ object.title }}" />
+        </div>
+      </div>
+      <div class="col-md-7">
+        <h1>{{ object.title|capfirst }}</h1>
+        <div class="mb-3">
+          {% for i in "12345"|slice:":object.rating"|make_list %}<i class="fas fa-star text-warning"></i>{% endfor %}
+          {% for i in "12345"|slice:"object.rating:"|make_list %}<i class="far fa-star text-warning"></i>{% endfor %}
+          <span>({{ object.rating }}/5)</span>
+        </div>
+        <h3 class="text-primary">{{ object.price }} €</h3>
+        {% if object.stock > 10 %}
+          <p class="text-success">
+            <strong>En stock</strong>
+          </p>
+        {% elif object.stock > 0 %}
+          <p class="text-warning">
+            <strong>Seulement {{ object.stock }} restants</strong>
+          </p>
+        {% else %}
+          <p class="text-danger">
+            <strong>Rupture de stock</strong>
+          </p>
+        {% endif %}
+        <div class="my-4">
+          <a href="{% url 'stocks:product-stock-order' object.pk %}"
+             class="btn btn-success btn-lg mr-2">
+            <i class="fas fa-cart-plus"></i> Commander
+          </a>
+          <a href="{% url 'stocks:product-stock-burn' object.pk %}"
+             class="btn btn-outline-danger btn-lg">
+            <i class="fas fa-fire"></i> Réduire le stock
+          </a>
+        </div>
       </div>
     </div>
-    <br />
-    <div class="card">
+    <div class="card mt-3">
       <div class="card-header">Description</div>
-      <div class="card-body">{{ object.description }}</div>
+      <div class="card-body">
+        <p>{{ object.description }}</p>
+      </div>
     </div>
-    <br />
-    <div class="card">
-      <div class="card-header">Quantity in stock</div>
-      <div class="card-body">{{ object.stock }}</div>
+    <div class="card mt-3">
+      <div class="card-header">Informations sur le produit</div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <strong>Catégorie :</strong> {{ object.category }}
+          </li>
+          <li class="list-group-item">
+            <strong>Marque :</strong> {{ object.brand }}
+          </li>
+          <li class="list-group-item">
+            <strong>SKU :</strong> {{ object.sku }}
+          </li>
+          <li class="list-group-item">
+            <strong>Poids :</strong> {{ object.weight }} kg
+          </li>
+          <li class="list-group-item">
+            <strong>Dimensions :</strong> {{ object.dimensions }}
+          </li>
+          <li class="list-group-item">
+            <strong>Garantie :</strong> {{ object.warranty_information }}
+          </li>
+        </ul>
+      </div>
     </div>
-    <hr />
+    <div class="my-5">
+      <h3>Historique des mouvements de stock</h3>
+      <div class="alert alert-warning" role="alert">Seuls les 10 derniers mouvements sont affichés.</div>
+      {% include "stocks/movements/block-list.html" %}
+    </div>
   </div>
-  <div class="alert alert-warning" role="alert">Only show the last 10 movements.</div>
-  {% include "stocks/movements/block-list.html" %}
 {% endblock content %}
