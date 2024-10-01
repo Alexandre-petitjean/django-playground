@@ -12,9 +12,9 @@
 
 License: MIT
 
-## Introduction
+# Introduction
 
-### Features
+## Features
 
 * User Authentication with [allauth](https://github.com/pennersr/django-allauth)
 * Bootstrap 5
@@ -23,7 +23,7 @@ License: MIT
 * Sample App:  **Stock**
 * Asynchronous tasks with Celery and RabbitMQ
 
-### Technologies and tools used in this project
+## Technologies and tools used in this project
 
 #### Dependencies
 * [Poetry](https://python-poetry.org/) as package manager.
@@ -49,7 +49,15 @@ License: MIT
 #### Documentation
 * [sphinx](https://www.sphinx-doc.org/en/master/) to generate documentation.
 
-## Installation
+# Usage
+
+This project is intended to be used with Docker and Docker Compose.
+
+```bash
+docker compose -f compose.local.yaml up
+```
+
+## Development
 
 ### 1. Install OS dependencies
 
