@@ -4,11 +4,64 @@
 {% load static %}
 
 {% block title %}
-  Burn stock for {{ product_name }}
+  Réduire le stock pour {{ product_name }}
 {% endblock title %}
 {% block content %}
-  <h1>
-    Burn stock for <span class="badge text-bg-info">{{ product_name }}</span> actual stock: <span class="badge text-bg-info">{{ product_quantity }}</span>
-  </h1>
-  {% crispy form %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <!-- Titre de la page -->
+        <div class="text-center mb-4">
+          <h1 class="display-4">Réduire le stock</h1>
+        </div>
+        <!-- Informations sur le produit -->
+        <div class="card mb-4">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img src="{{ product_thumbnail }}"
+                   class="img-fluid rounded-start"
+                   alt="{{ product_name }}" />
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h3 class="card-title">{{ product_name }}</h3>
+                <!-- Affichage du stock actuel -->
+                {% if product_stock > 10 %}
+                  <p class="text-success">
+                    <strong>Stock actuel : En stock</strong>
+                  </p>
+                {% elif product_stock > 0 %}
+                  <p class="text-warning">
+                    <strong>Stock actuel : Seulement {{ product_stock }} restants</strong>
+                  </p>
+                {% else %}
+                  <p class="text-danger">
+                    <strong>Stock actuel : Rupture de stock</strong>
+                  </p>
+                {% endif %}
+                <!-- Affichage du dernier mouvement de stock entrant -->
+                {% if product_last_incoming_movement %}
+                  <p class="mt-3">
+                    <strong>Dernière sortie en stock :</strong> {{ product_last_incoming_movement.quantity }} unités le {{ product_last_incoming_movement.created_at|date:"d/m/Y" }}
+                  </p>
+                {% else %}
+                  <p class="mt-3">
+                    <strong>Aucun mouvement de stock sortant enregistré.</strong>
+                  </p>
+                {% endif %}
+                <p>{{ object }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Carte contenant le formulaire -->
+        <div class="card shadow">
+          <div class="card-body">
+            <h3 class="card-title mb-4">Informations de la reduction de stock</h3>
+            {% crispy form %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock content %}

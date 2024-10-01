@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from django.conf import settings
 from django.db import models
@@ -61,6 +62,14 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def last_incoming_movement(self) -> Optional["StockMovement"]:
+        return self.stock_movements.filter(movement_type=StockMovement.MovementType.INCOMING).last()
+
+    @property
+    def last_outgoing_movement(self) -> Optional["StockMovement"]:
+        return self.stock_movements.filter(movement_type=StockMovement.MovementType.OUTGOING).last()
 
     def burn_stock(self, quantity: int, scheduled_date: datetime | None, reason: str):
         return burn_stock_task.apply_async(
