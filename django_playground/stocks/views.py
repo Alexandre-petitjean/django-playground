@@ -67,6 +67,8 @@ class ProductBurnFormView(FormView):
         product = get_object_or_404(Product, pk=self.kwargs.get("pk"))
         context["product_name"] = product.title
         context["product_quantity"] = product.stock
+        context["product_thumbnail"] = product.thumbnail
+        context["product_last_incoming_movement"] = product.last_outgoing_movement
         return context
 
     def form_valid(self, form):
@@ -93,6 +95,8 @@ class ProductOrderFormView(FormView):
         context = super().get_context_data(**kwargs)
         product = get_object_or_404(Product, pk=self.kwargs.get("pk"))
         context["product_name"] = product.title
+        context["product_thumbnail"] = product.thumbnail
+        context["product_last_incoming_movement"] = product.last_incoming_movement
         return context
 
     def form_valid(self, form):
