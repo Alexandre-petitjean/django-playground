@@ -332,3 +332,6 @@ django_playground/media/
 .env
 .envs/*
 !.envs/.local/
+
+# Ignore generated files
+.graphs/

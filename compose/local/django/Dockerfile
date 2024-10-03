@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   build-essential \
   # psycopg dependencies
   libpq-dev \
+  # Pygraphiviz dependencies
+  graphviz \
+  graphviz-dev \
   # Poetry dependencies
   curl
 
@@ -59,6 +62,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # Translations dependencies
   gettext \
+  graphviz \
+  graphviz-dev \
   # Cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*

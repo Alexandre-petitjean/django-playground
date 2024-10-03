@@ -139,6 +139,10 @@ To run the tests, check your test coverage, and generate an HTML coverage report
 
     $ pytest
 
+### See migrations
+
+    $ docker compose -f compose.local.yaml run --rm django python manage.py visualizemigrations .graphs/migration.gv
+
 ### Live reloading and Sass CSS compilation
 
 Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).

@@ -79,6 +79,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "django_celery_beat",  # Database-backed Periodic Tasks
     "django_celery_results",  # Database-backed Task Results
+    "django_migration_vis",
 ]
 
 LOCAL_APPS = [
