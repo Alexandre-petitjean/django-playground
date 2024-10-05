@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 from typing import Optional
 
 from django.conf import settings
@@ -6,8 +7,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.timezone import now
 
-from django_playground.stocks.tasks import burn_stock_task
 from django_playground.stocks.tasks import order_stock_task
+from django_playground.stocks.tasks import send_stock_task
 
 
 class Category(models.Model):
@@ -71,9 +72,17 @@ class Product(models.Model):
     def last_outgoing_movement(self) -> Optional["StockMovement"]:
         return self.stock_movements.filter(movement_type=StockMovement.MovementType.OUTGOING).last()
 
-    def burn_stock(self, quantity: int, scheduled_date: datetime | None, reason: str):
-        return burn_stock_task.apply_async(
-            args=[self.id, quantity, reason],
+    @property
+    def discounted_price(self) -> Decimal:
+        """
+        Used in the view to display the discounted price of the product.
+        Returns: The discounted price of the product. In a Decimal format.
+        """
+        return round(self.price * (1 - self.discount_percentage / 100), 2)
+
+    def send_stock(self, quantity: int, scheduled_date: datetime | None, reason: str):
+        return send_stock_task.apply_async(
+            args=[self.id, quantity if quantity else self.stock, reason],
             eta=now() if scheduled_date is None else scheduled_date,
         )
 

@@ -7,7 +7,10 @@
 {% endblock title %}
 {% block content %}
   <h1>Stock App</h1>
-  <div class="alert alert-info">This App is made to show how to use Celery task inside a Django app.</div>
+  <div class="alert alert-info d-flex align-items-center" role="alert">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    <div>This App is made to show how to use Celery task inside a Django app.</div>
+  </div>
   <div class="col">
     <a href="{% url 'stocks:products' %}">
       <h2>Products</h2>
@@ -15,6 +18,9 @@
   </div>
   <div class="col">
     <h1>Stock App Model</h1>
-    <div class="alert alert-info" role="alert">To be added...</div>
+    <div class="alert alert-info d-flex align-items-center" role="alert">
+      <i class="bi bi-info-circle-fill me-2"></i>
+      <div>To be added...</div>
+    </div>
   </div>
 {% endblock content %}
