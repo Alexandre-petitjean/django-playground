@@ -82,7 +82,7 @@ pyenv local django-playground-3.12.5
 poetry install
 ```
 
-### 3. Setting Up Your Users
+### 3. Setting Up Your Users (Optional)
 
 A **default superuser** is created with the following credentials
 
@@ -105,6 +105,12 @@ For convenience, you can keep your normal user logged in on Chrome and your supe
 docker compose -f compose.local.yaml up
 ```
 
+### 5. Import data
+
+```bash
+docker compose -f compose.local.yaml run --rm django python manage.py manage.py loaddata --app=stocks products
+```
+
 ### 6. Access the application
 
 | Service  | URL                                              |
@@ -120,6 +126,21 @@ docker compose -f compose.local.yaml up
 Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
 
 See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+
+
+### Import and dump data:
+
+> The initial dataset is from https://dummyjson.com/products?
+
+To import the data:
+```bash
+docker compose -f compose.local.yaml run --rm django python manage.py loaddata --app=stocks products```
+
+To dump the data:
+```bash
+docker compose -f compose.local.yaml run --rm django python manage.py dumpdata stocks.Product -o "django_playground/stocks/fixtures/products.json" --indent 4
+```
+
 
 ### Type checks
 
