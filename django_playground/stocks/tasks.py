@@ -5,8 +5,8 @@ from celery import shared_task
 
 
 @shared_task
-def burn_stock_task(product_id, quantity: int, reason: str) -> str:
-    sleep(15)
+def send_stock_task(product_id, quantity: int, reason: str) -> str:
+    sleep(5)
     return create_stock_movement(product_id, movement_type="out", quantity=quantity, description=reason)
 
 

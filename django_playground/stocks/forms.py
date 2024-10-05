@@ -27,7 +27,7 @@ class StockMovementForm(ModelForm):
         self.helper = FormHelper()
         self.helper.form_id = "form-stock-movement"
         self.helper.form_method = "post"
-        self.helper.add_input(Submit("submit", "Submit"))
+        self.helper.add_input(Submit("submit", "Submit", css_class="btn btn-success btn-lg"))
 
     def save(self, commit=True):  # noqa: FBT002
         instance = super().save(commit=False)
@@ -52,18 +52,18 @@ class ProductStockForm(Form):
         self.helper = FormHelper()
         self.helper.form_id = "form-product-stock"
         self.helper.form_method = "post"
-        self.helper.add_input(Submit("submit", "Submit"))
+        self.helper.add_input(Submit("submit", "Submit", css_class="btn btn-success btn-lg"))
 
 
-class ProductBurnForm(ProductStockForm):
+class ProductSendForm(ProductStockForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["quantity"].help_text = "Quantity to burn, if not specified all the stock will be burned."
+        self.fields["quantity"].help_text = "Quantity to send, if not specified all the stock will be sent."
         self.fields[
             "scheduled_date"
-        ].help_text = "Date when the stock will be burned. If not specified, the stock will be burned immediately."
-        self.fields["reason"].initial = "Stock burn for no reason."
+        ].help_text = "Date when the stock will be send. If not specified, the stock will be sent immediately."
+        self.fields["reason"].initial = "Stock sent to customer."
 
 
 class ProductOrderForm(ProductStockForm):

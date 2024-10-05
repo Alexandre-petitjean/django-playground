@@ -12,18 +12,136 @@
   border-color: #eed3d7;
 }
 
-.card-img-top {
-    height: 300px;
-    object-fit: scale-down;
+
+/* Détails du produit */
+.main-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  background-color: #f8f9fa;
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnail.selected {
+  border-color: #0d6efd; /* Couleur primaire de Bootstrap */
+}
+
+.discount-badge {
+  top: 10px;
+  left: 10px;
+  padding: 0.5em 0.75em;
+  font-size: 1em;
+}
+
+.product-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.product-brand {
+  font-size: 1.2rem;
+}
+
+/* Section des prix */
+.product-price-section {
+  font-size: 1.8rem; /* Augmenté de 1.5rem à 1.8rem */
+}
+
+.original-price {
+  text-decoration: line-through;
+  font-size: 1.5rem; /* Augmenté de 1.2rem à 1.5rem */
+}
+
+.discounted-price {
+  font-weight: bold;
+  font-size: 2.5rem; /* Augmenté de 2rem à 2.5rem */
+}
+
+.product-price-section .badge {
+  font-size: 1.2rem; /* Augmenté pour correspondre à la taille des prix */
+  padding: 0.5em 0.75em;
+}
+
+.product-price-section small {
+  display: block;
+  margin-top: 5px;
+  font-size: 1.2rem; /* Augmenté pour améliorer la lisibilité */
+}
+
+.product-description {
+  margin-top: 20px;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+
+/* Product card in the list view */
+.product-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.discount-badge {
+  top: 10px;
+  left: 10px;
+  padding: 0.5em 0.75em;
+  font-size: 0.9em;
 }
 
 .rating-badge {
   top: 10px;
   right: 10px;
-  color: gold;
+  padding: 0.5em 0.75em;
+  font-size: 1em;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 0.25rem;
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: contain;
+  background-color: #f8f9fa;
 }
 
 .price {
-  font-size: 1.2rem;
-  color: #28a745; /* Vert Bootstrap */
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+
+/* Product forms */
+.card {
+  border: none;
+}
+
+.card .card-body {
+  padding: 2rem;
+}
+
+.breadcrumb {
+  background-color: transparent;
+}
+
+.alert {
+  margin-top: 2rem;
 }
