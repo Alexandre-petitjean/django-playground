@@ -8,7 +8,6 @@ from django.urls import reverse_lazy
 from django.utils.timezone import now
 from django.views import View
 from django.views.generic import CreateView
-from django.views.generic import FormView
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -16,6 +15,7 @@ from django.views.generic.list import ListView
 from django_playground.stocks.forms import ProductOrderForm
 from django_playground.stocks.forms import ProductSendForm
 from django_playground.stocks.forms import StockMovementForm
+from django_playground.stocks.mixins import ProductFormViewMixin
 from django_playground.stocks.models import Product
 from django_playground.stocks.models import StockMovement
 
@@ -55,21 +55,6 @@ class ProductDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context["stock_movements"] = self.object.stock_movements.all().order_by("-created_at")[:10]
         return context
-
-
-class ProductFormViewMixin(FormView):
-    template_name = "stocks/products/form-send-order.html"
-    form_class = None
-    success_url = reverse_lazy("stocks:products")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        product = get_object_or_404(Product, pk=self.kwargs.get("pk"))
-        context["product"] = product
-        return context
-
-    def get_success_url(self):
-        return reverse("stocks:product-detail", kwargs={"pk": self.kwargs.get("pk")})
 
 
 class SendProductFormView(ProductFormViewMixin):
