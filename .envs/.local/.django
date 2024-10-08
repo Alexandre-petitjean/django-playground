@@ -12,5 +12,5 @@ CELERY_RESULT_BACKEND=django-db
 # ------------------------------------------------------------------------------
 
 # Flower
-CELERY_FLOWER_USER=rGdFKMZleKiCUEJdbhBmYpeNckhhrGUI
-CELERY_FLOWER_PASSWORD=7uSWS2hgKHViIB21lbTzB29CJ8BlEdZbUTDlcImBu396mfuTUUHECOdK03jBoMzo
+CELERY_FLOWER_USER=guest
+CELERY_FLOWER_PASSWORD=guest
