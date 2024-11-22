@@ -84,7 +84,7 @@ psycopg = {version = "^3.2.1", extras = ["c"]}  # https://github.com/psycopg/psy
 
 # Django
 # ------------------------------------------------------------------------------
-django-anymail="^11.1"  # https://github.com/anymail/django-anymail
+django-anymail="^12.0"  # https://github.com/anymail/django-anymail
 
 [build-system]
 requires = ["poetry-core"]
