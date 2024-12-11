@@ -44,7 +44,7 @@ watchdog="^6.0.0" # https://github.com/gorakhargosh/watchdog
 Werkzeug = {version = "^3.0.4", extras = ["watchdog"]}  # https://github.com/pallets/werkzeug
 ipdb="^0.13.13"  # https://github.com/gotcha/ipdb
 psycopg = {version = "^3.2.1", extras = ["c"]}  # https://github.com/psycopg/psycopg
-watchfiles = "^0.24.0"  # https://github.com/samuelcolvin/watchfiles
+watchfiles = "^1.0.3"  # https://github.com/samuelcolvin/watchfiles
 
 # Testing
 # ------------------------------------------------------------------------------
