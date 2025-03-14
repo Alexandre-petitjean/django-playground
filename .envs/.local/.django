@@ -7,9 +7,11 @@ IPYTHONDIR=/app/.ipython
 # ------------------------------------------------------------------------------
 RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
 CELERY_RESULT_BACKEND=django-db
+DATABASE_URL=postgres://postgres:postgres@postgres:5432/django_playground
 
 # Celery
 # ------------------------------------------------------------------------------
+CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672/
 
 # Flower
 CELERY_FLOWER_USER=rGdFKMZleKiCUEJdbhBmYpeNckhhrGUI

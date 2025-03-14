@@ -3,5 +3,6 @@
 POSTGRES_HOST=postgres
 POSTGRES_PORT=5432
 POSTGRES_DB=django_playground
-POSTGRES_USER=lEMQkkzKdpfRyrvLvXcYzLFUWgYTgrOT
-POSTGRES_PASSWORD=beVg0YkpzAn7YJVQcn45uzztNPcb06Ch08hrKUMpBHK1Iy764aAPCt5i5dXjUTkD
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DATABASE_URL=postgres://postgres:postgres@postgres:5432/django_playground
